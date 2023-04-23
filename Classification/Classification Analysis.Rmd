@@ -1,0 +1,98 @@
+---
+title: "Classification Analysis"
+author: "Elliot Li"
+date: "2023-04-22"
+output: html_document
+---
+```{r}
+library(caret)
+library(MASS)
+library(tidyverse)
+library(plotly)
+library(dplyr)
+library(ggplot2)
+library(fpc)
+library(cluster)
+set.seed(1234)
+```
+
+```{r}
+data <- read.csv("cleaned_baseball_weather.csv")
+data$d_n <- ifelse(data$day_night == 'D',1,0)
+#If day time -> 1, if night time -> 0
+data$win <- ifelse(data$v_score > data$h_score, 1, 0)
+#If the visit team wins then 1 and if the home team wins then 0
+
+homevar <- c('win','d_n','h_hits','h_rbi','h_walks','h_strikeouts','h_stolen_bases','AWND','PRCP','TMAX','TMIN','WDF2','WDF5','WSF2','WSF5')
+home <- as.data.frame(scale(data[homevar]))
+
+visitvar <- c('win','d_n','v_hits','v_rbi','v_walks','v_strikeouts','v_stolen_bases','AWND','PRCP','TMAX','TMIN','WDF2','WDF5','WSF2','WSF5')
+visit <- as.data.frame(scale(data[visitvar]))
+
+#p <- 0.75
+#set.seed(123)
+#train_index <- createDataPartition(data$win, p = p, list = FALSE)
+#h_train_data <- home[train_index, ]
+#h_test_data <- home[-train_index, ]
+#v_train_data <- visit[train_index, ]
+#v_test_data <- visit[-train_index, ]
+```
+
+#Home Team Analysis
+```{r}
+summary(home)
+```
+##K-Means Clustering | Home Team
+```{r}
+home_1 = home[,-1]
+wss<- NULL
+for (i in 1:20){
+  fit = kmeans(home_1,centers = i)
+  wss = c(wss, fit$tot.withinss)
+}
+plot(1:20, wss, type = "o")
+```
+```{r}
+fit5 = kmeans(home_1,centers = 5)
+plotcluster(home_1,fit5$cluster,pointsbyclvecd=FALSE)
+fit6 = kmeans(home_1,centers = 6)
+plotcluster(home_1,fit6$cluster,pointsbyclvecd=FALSE)
+```
+```{r}
+```
+
+#Visit Team Analysis
+```{r}
+summary(visit)
+```
+##K-Means Clustering | Visit Team
+```{r}
+visit_1 = visit[,-1]
+wss<- NULL
+for (i in 1:20){
+  fit = kmeans(visit_1,centers = i)
+  wss = c(wss, fit$tot.withinss)
+}
+plot(1:20, wss, type = "o")
+```
+```{r}
+fit5 = kmeans(visit_1,centers = 5)
+plotcluster(visit_1,fit5$cluster,pointsbyclvecd=FALSE)
+fit6 = kmeans(visit_1,centers = 6)
+plotcluster(visit_1,fit6$cluster,pointsbyclvecd=FALSE)
+#Cluster of 6 is better
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

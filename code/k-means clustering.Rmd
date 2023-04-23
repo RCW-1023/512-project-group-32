@@ -17,7 +17,7 @@ set.seed(1234)
 ```
 
 ```{r}
-data <- read.csv("cleaned_baseball_weather.csv")
+data <- read.csv("../data/cleaned_baseball_weather.csv")
 data$d_n <- ifelse(data$day_night == 'D',1,0)
 #If day time -> 1, if night time -> 0
 data$win <- ifelse(data$v_score > data$h_score, 1, 0)

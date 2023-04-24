@@ -4,6 +4,12 @@ library(dplyr)
 library(plyr)
 library(readr)
 library(caret)
+library(ggplot2)
+library(devtools)
+library(ggimage)
+source_url('https://gist.github.com/fawda123/7471137/raw/cd6e6a0b0bdb4e065c597e52165e5ac887f5fe95/nnet_plot_update.r')
+
+
 
 ###############################################################################
 #Reading in the data
@@ -64,7 +70,8 @@ RMSE(dv_pitching_test$penalized_strikes,pred)
 #Setting up model and evaluating with caret to use corss val and grid search 
 ###############################################################################
 controlList <- trainControl(method = "cv", number = 5, search = "grid")
-tuneMatrix <- expand.grid(size = 2, decay = 0)
+tuneMatrix <- expand.grid(size = seq(from = 5, to = 30, by = 5),
+                          decay = seq(from = 0.01, to = 0.1, by = 0.01))
 
 set.seed(1)
 caret_net <- train(penalized_strikes ~.,
@@ -91,6 +98,11 @@ abline(a=0, b=1)
 #https://www.projectpro.io/recipes/tune-hyper-parameters-grid-search-r
 #https://stackoverflow.com/questions/48425452/get-carets-model-parameters-for-nnet
 
+library(devtools)
+source_url('https://gist.githubusercontent.com/fawda123/7471137/raw/466c1474d0a505ff044412703516c34f1a4684a5/nnet_plot_update.r')
+
+#plot each model
+plot.nnet(caret_net$finalModel, cex.val = .75)
 ###############################################################################
 #Repeating for total number of hits
 ###############################################################################
@@ -125,7 +137,14 @@ plot(x=pred2, y= dv_hits_test$total_hits,
      ylab='Actual Values',
      main='Predicted vs. Actual Values')
 abline(a=0, b=1)
-
+result<-data.frame(dv_hits_test$total_hits,pred2)
+ggplot(result,aes(x=pred2,y=dv_hits_test.total_hits))+
+  geom_point()+
+  geom_abline(slope=1,intercept = 0, color='red')+
+  labs(x='Predicted Value of Normalized Hits',y='Actual Value of Normalized Hits',
+       title = 'Neural Network Results VS Actual Results')+
+  theme_minimal()
+plot.nnet(caret_net1$finalModel, cex.val = .75)
 ###############################################################################
 #Repeating for total number of errors
 ###############################################################################

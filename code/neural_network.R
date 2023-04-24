@@ -8,7 +8,7 @@ library(ggplot2)
 library(devtools)
 library(ggimage)
 source_url('https://gist.github.com/fawda123/7471137/raw/cd6e6a0b0bdb4e065c597e52165e5ac887f5fe95/nnet_plot_update.r')
-
+library(Metrics)
 
 
 ###############################################################################
@@ -86,7 +86,7 @@ caret_net <- train(penalized_strikes ~.,
 pred1 <- predict(caret_net, newdata = dv_pitching_test)
 
 RMSE(dv_pitching_test$penalized_strikes,pred1)
-
+mae(dv_pitching_test$penalized_strikes, pred1)
 plot(x=pred1, y= dv_pitching_test$penalized_strikes,
      xlab='Predicted Values',
      ylab='Actual Values',
@@ -131,7 +131,7 @@ caret_net1 <- train(total_hits ~.,
 pred2 <- predict(caret_net1, newdata = dv_hits_test)
 
 RMSE(dv_hits_test$total_hits,pred2)
-
+mae(dv_hits_test$total_hits, pred2)
 plot(x=pred2, y= dv_hits_test$total_hits,
      xlab='Predicted Values',
      ylab='Actual Values',
@@ -139,12 +139,12 @@ plot(x=pred2, y= dv_hits_test$total_hits,
 abline(a=0, b=1)
 result<-data.frame(dv_hits_test$total_hits,pred2)
 ggplot(result,aes(x=pred2,y=dv_hits_test.total_hits))+
-  geom_point()+
-  geom_abline(slope=1,intercept = 0, color='red')+
+  geom_point(color='#a02a35')+
+  geom_abline(slope=1,intercept = 0, color='black')+
   labs(x='Predicted Value of Normalized Hits',y='Actual Value of Normalized Hits',
        title = 'Neural Network Results VS Actual Results')+
   theme_minimal()
-plot.nnet(caret_net1$finalModel, cex.val = .75)
+plot.nnet(caret_net1$finalModel, cex.val = .75, circle.col ='#a02a35')
 ###############################################################################
 #Repeating for total number of errors
 ###############################################################################
@@ -174,7 +174,7 @@ caret_net2 <- train(total_error ~.,
 pred3 <- predict(caret_net2, newdata = dv_errors_test)
 
 RMSE(dv_errors_test$total_error,pred3)
-
+mae(dv_errors_test$total_error, pred3)
 plot(x=pred3, y= dv_errors_test$total_error,
      xlab='Predicted Values',
      ylab='Actual Values',

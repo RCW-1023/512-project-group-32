@@ -1,7 +1,7 @@
 
 ## Playing Against the Elements: How Environmental Factors Influence Baseball Game Outcomes
 
-### ANLY-152 Project-group 32
+### ANLY-512 project-group 32
 ### Team members: Ryan Walter, Eliot Li, Yu Tao
 
 This project studied the impact of weather on baseball performance. Data from [Major League Baseball (MLB) games played between 2010 and 2015](https://www.retrosheet.org/) were collected, along with corresponding [weather data](https://www.ncei.noaa.gov/) from the cities where the games were held.
